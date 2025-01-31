@@ -14,15 +14,12 @@ export default function DatePickerField({ date, onChangeDate }) {
 
     // Handle user picking a date
     const onDateChange = (event, selectedDate) => {
-        // For iOS, user can press cancel and selectedDate might be undefined
-        // For Android, event.type might be 'dismissed'
         setShowPicker(false);
-
         if (selectedDate) {
-            // Notify the parent about the new date
             onChangeDate(selectedDate);
         }
     };
+
 
     // Format the date to a readable string
     const formattedDate = date ? date.toISOString().split('T')[0] : '';
@@ -35,10 +32,10 @@ export default function DatePickerField({ date, onChangeDate }) {
             {/* Show the picker when showPicker is true */}
             {showPicker && (
                 <DateTimePicker
-                    value={date || new Date()}   // default to "today" if date not set
+                    value={date || new Date()}
                     mode="date"
                     display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                    onChange={onDateChange}
+                    onChange={onDateChange}   // <== call with two args
                 />
             )}
         </View>
