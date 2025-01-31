@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import MoodBarChart from './MoodBarChart';
 import DatePickerField from './DatePickerField';
-
+import LastWeekMoods from './LastWeekMoods'; // ✅ Import the new component
 const moodImages = {
   'Very Sad': require('./assets/very_sad.png'),
   'Sad': require('./assets/sad.png'),
@@ -34,22 +34,23 @@ export default function App() {
   const [entries, setEntries] = useState([]);
 
   const handleSave = () => {
-    const currentDate = date.toISOString().split('T')[0];
-    const newEntry = { date: currentDate, mood: selectedMood, note };
+    const currentDate = date.toLocaleDateString('en-CA'); // ✅ Always uses local time
+const newEntry = { date: currentDate, mood: selectedMood, note };
 
     // Check if there's already an entry
     const existingEntryIndex = entries.findIndex((entry) => entry.date === currentDate);
 
     if (existingEntryIndex !== -1) {
-      // Replace old entry
-      const updatedEntries = [...entries];
-      updatedEntries[existingEntryIndex] = newEntry;
-      setEntries(updatedEntries);
-      alert(`You updated ${currentDate}'s mood.`);
+        // Replace the old entry with new data
+        const updatedEntries = [...entries];
+        updatedEntries[existingEntryIndex] = newEntry;
+        setEntries(updatedEntries);
     } else {
-      setEntries([...entries, newEntry]);
+        // Otherwise add a new entry
+        setEntries([...entries, newEntry]);
     }
-  };
+};
+
 
   return (
     <ScrollView style={styles.scrollContainer}>
@@ -124,17 +125,12 @@ export default function App() {
         </View>
 
         {/* --- MOOD HISTORY --- */}
-        <Text style={styles.historyTitle}>LAST WEEK OF MOODS</Text>
-        <ScrollView style={styles.historyContainer}>
-          {entries.map((entry, index) => (
-            <View key={index} style={styles.entryItem}>
-              <Text style={styles.historyText}>
-                {index + 1}) {entry.date} - {entry.mood},{" "}
-                {entry.note ? `"${entry.note}"` : ""}
-              </Text>
-            </View>
-          ))}
-        </ScrollView>
+
+
+
+        {/* Last Week Moods Component */}
+        <LastWeekMoods entries={entries} />
+
       </View>
     </ScrollView>
   );
