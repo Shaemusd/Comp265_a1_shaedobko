@@ -7,21 +7,23 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
+  //Platform,
 } from 'react-native';
 import MoodBarChart from './MoodBarChart';
+import DatePickerField from './DatePickerField';
+
+
 // (Optionally) import chart or calendar libraries here
 // import { SomeChart } from 'some-chart-library';
 // import { Calendar } from 'react-native-calendars'; // example
 
 export default function App() {
   // State to manage:
-  const [date, setDate] = useState('2025-02-01'); // Example daate string
-  const [selectedMood, setSelectedMood] = useState(null);
+  const [date, setDate] = useState(new Date())
+  ;const [selectedMood, setSelectedMood] = useState(null);
   const [note, setNote] = useState('');
   // Past entries (example):
   const [entries, setEntries] = useState([
-    { date: '2025-01-30', mood: 'Happy', note: "I'm good" },
-    { date: '2025-01-29', mood: 'Sad', note: 'Bad day' },
   ]);
 
   // Mood arrays
@@ -29,17 +31,12 @@ export default function App() {
   const secondRowMoods = ['Angry', 'Excited'];
 
   const handleSave = () => {
-    // On save, add an entry
     const newEntry = {
-      date,
+      date: date.toISOString().split('T')[0], // or any format you prefer
       mood: selectedMood,
       note,
     };
     setEntries([...entries, newEntry]);
-
-    // Clear out the fields if you want
-    // setSelectedMood(null);
-    // setNote('');
   };
 
   return (
@@ -54,16 +51,10 @@ export default function App() {
   {/* Add your MoodBarChart component, passing in `entries` */}
   <MoodBarChart entries={entries} />
 </View>
-      {/* --- DATE PICKER --- */}
-      {/* You might swap this for a real date picker or a small calendar component */}
+      {/* --- DATE PICKER (New) --- */}
       <View style={styles.dateContainer}>
-        <Text>Date:</Text>
-        <TextInput
-          style={styles.dateInput}
-          value={date}
-          onChangeText={setDate}
-          placeholder="YYYY-MM-DD"
-        />
+        {/* Our new component to pick dates */}
+        <DatePickerField date={date} onChangeDate={setDate} />
       </View>
 
       {/* --- MOOD ROW 1 --- */}
@@ -133,6 +124,7 @@ export default function App() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
