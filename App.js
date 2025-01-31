@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import MoodBarChart from './MoodBarChart';
 import DatePickerField from './DatePickerField';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 const moodImages = {
   'Very Sad': require('./assets/very_sad.png'),
   'Sad': require('./assets/sad.png'),
@@ -36,7 +37,7 @@ export default function App() {
   ]);
 
   // Mood arrays
-  const firstRowMoods = ['Very Sad', 'Sad', 'Neutral', 'Happy', 'Very Happy'];
+  const firstRowMoods = ['Sad', 'Neutral', 'Happy', 'Very Sad', 'Very Happy'];
   const secondRowMoods = ['Angry', 'Excited'];
 
   const handleSave = () => {
@@ -164,6 +165,8 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     resizeMode: 'contain', // or 'cover', etc.
+    backgroundColor: '#fff',
+    borderColor: '#fff',
   },
 
   container: {
@@ -172,9 +175,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: '#fff',
   },
-  // p: {
-  //   fontSize: 20,
-  // },
   header: {
     padding: 20,
     fontSize: 24,
@@ -212,12 +212,13 @@ const styles = StyleSheet.create({
   },
   moodItem: {
     backgroundColor: '#eee',
-    padding: 10,
+    // padding: 10,
     borderRadius: 10,
     margin: 5,            // little margin around each item
     justifyContent: 'center',
     alignItems: 'center',
   },
+  
   selectedMoodItem: {
     backgroundColor: '#cde',
   },
