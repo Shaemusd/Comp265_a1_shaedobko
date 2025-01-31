@@ -1,90 +1,71 @@
 import React from 'react';
-import { View, Dimensions, StyleSheet } from 'react-native';
+import { Dimensions } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 
-// Define the moods that you want in the chart (in a fixed order)
-const MOODS = ['Angry', 'Very Sad', 'Sad', 'Neutral', 'Happy', 'Very Happy', 'Excited',''];
+// We'll map textual mood strings to the same index as these emojis
+// Order: sad, neutral, happy, very sad, very happy, angry, excited
+const MOOD_EMOJIS = ['😢', '😐', '😊', '😭', '🤩', '😡', '🤪'];
 
-// A helper to count how many times each mood appears in the entries.
-const getMoodCounts = (entries) => {
-    // Create a count object initialized to 0 for each mood (HI PEOPLE)
+// We'll also define the textual mood strings in the same order
+const MOOD_ORDER = ['Sad', 'Neutral', 'Happy', 'Very Sad', 'Very Happy', 'Angry', 'Excited'];
+
+export default function MoodBarChart({ entries }) {
+    // 1) Count each mood in entries
+    // First, create a count object by mood string
     const counts = {
-        'Very Sad': 0,
         'Sad': 0,
         'Neutral': 0,
         'Happy': 0,
+        'Very Sad': 0,
         'Very Happy': 0,
         'Angry': 0,
-        'Excited': 0,
-        '': 0,
+        'Excited': 0
     };
+
+    // Go through each entry, increment the correct mood count
     entries.forEach((entry) => {
         if (counts.hasOwnProperty(entry.mood)) {
-            counts[entry.mood] += 1; 
+            counts[entry.mood] += 1;
         }
     });
-    return counts;
-};
 
-export default function MoodBarChart({ entries }) {
-    // Compute how many times each mood was selected
-    const moodCounts = getMoodCounts(entries);
+    // 2) Build an array of counts in the same order as MOOD_ORDER
+    // E.g., [countOf(Sad), countOf(Neutral), countOf(Happy), ...]
+    const dataValues = MOOD_ORDER.map(mood => counts[mood]);
 
-    // We'll map MOODS to their counts to produce data for the chart
-    const dataValues = MOODS.map((mood) => moodCounts[mood]);
-
-    // The chart expects data in this shape:
+    // 3) Now create chartData with the emoji labels and the numeric data
     const chartData = {
-        labels: MOODS,
+        labels: MOOD_EMOJIS,        // The emojis we want under each bar
         datasets: [
             {
-                data: dataValues,
+                data: dataValues,       // The counts array
             },
         ],
     };
 
-    // Get the screen width to size the chart
+    // 4) Render the bar chart
     const screenWidth = Dimensions.get('window').width;
 
     return (
-        <View style={styles.chartContainer}>
-            <BarChart
-            style={{ marginRight: 16 }}
-                data={chartData}
-                width={screenWidth}
-                height={250}
-                chartConfig={{
-                    backgroundColor: '#fff',
-                    backgroundGradientFrom: '#fff',
-                    backgroundGradientTo: '#fff',
-                    color: (opacity = 1) => `rgba(0,0,0,${opacity})`,
-                    labelColor: (opacity = 1) => `rgba(0,0,0,${opacity})`,
+        <BarChart
+            data={chartData}
+            width={screenWidth * 0.9}
+            height={220}
+            fromZero
+            style={{ marginRight: 20 }} 
+            showBarTops
+            chartConfig={{
+                backgroundColor: '#fff',
+                backgroundGradientFrom: '#fff',
+                backgroundGradientTo: '#fff',
+                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // bars color
+                labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // label color
+                propsForVerticalLabels: {
+                    fontSize: 20, // if you want bigger emoji
+                },
 
-                    // X-axis label styling
-                    propsForVerticalLabels: {
-                        fontSize: 12,
-                        fill: 'blue', // or '#333'
-                        fontWeight: '600',
-                    },
-                    // Y-axis label styling
-                    propsForHorizontalLabels: {
-                        fontSize: 12,
-                        fill: 'red',
-                        fontWeight: '600',
-                    },
-                }}
-                fromZero
-                showBarTops
-                verticalLabelRotation={-45}
-            />
-        </View>
+            }}
+            verticalLabelRotation={0} // 0, 30, or 45, etc.
+        />
     );
 }
-
-const styles = StyleSheet.create({
-    chartContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 0,
-    },
-});

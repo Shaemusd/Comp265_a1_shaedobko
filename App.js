@@ -81,7 +81,7 @@ export default function App() {
           <DatePickerField date={date} onChangeDate={setDate} />
         </View>
 
-        {/* --- MOOD ROW 1 --- */}
+        {/* --- MOOD ROW 1 (Sad, Neutral, Happy, etc.) --- */}
         <View style={styles.moodRow}>
           {firstRowMoods.map((mood) => (
             <TouchableOpacity
@@ -94,14 +94,13 @@ export default function App() {
             >
               <Image
                 source={moodImages[mood]}
-                style={styles.moodIcon}
+                style={selectedMood === mood ? styles.moodIconSelected : styles.moodIcon}
               />
-              {/* Optionally, you could still show text below the icon */}
-              {/* <Text>{mood}</Text> */}
             </TouchableOpacity>
           ))}
         </View>
-        {/* --- MOOD ROW 2 (Angry/Excited) --- */}
+
+        {/* --- MOOD ROW 2 (Angry, Excited) --- */}
         <View style={styles.moodRow}>
           {secondRowMoods.map((mood) => (
             <TouchableOpacity
@@ -114,11 +113,12 @@ export default function App() {
             >
               <Image
                 source={moodImages[mood]}
-                style={styles.moodIcon}
+                style={selectedMood === mood ? styles.moodIconSelected : styles.moodIcon}
               />
             </TouchableOpacity>
           ))}
         </View>
+
 
         {/* --- NOTE INPUT --- */}
         <View style={styles.noteContainer}>
@@ -159,7 +159,7 @@ export default function App() {
 
 
 const styles = StyleSheet.create({
-  
+
 
   moodIcon: {
     width: 100,
@@ -188,7 +188,6 @@ const styles = StyleSheet.create({
     marginBottom: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#efefef',
   },
 
   dateContainer: {
@@ -218,9 +217,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  
+  moodIconSelected: {
+    width: 150,   // bigger
+    height: 150,
+    resizeMode: 'contain',
+  },
   selectedMoodItem: {
     backgroundColor: '#cde',
+
   },
   noteContainer: {
     flexDirection: 'row',
