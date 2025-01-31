@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
-import { View, Button, Platform } from 'react-native';
+import { View, Button, Platform, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-
 export default function DatePickerField({ date, onChangeDate }) {
-    // If the picker is visible
     const [showPicker, setShowPicker] = useState(false);
 
-    // Handle opening the picker
+    // Open Picker
     const openPicker = () => {
         setShowPicker(true);
     };
 
-    // Handle user picking a date
+    // Handle Date Selection
     const onDateChange = (event, selectedDate) => {
         setShowPicker(false);
         if (selectedDate) {
@@ -20,24 +18,44 @@ export default function DatePickerField({ date, onChangeDate }) {
         }
     };
 
-
-    // Format the date to a readable string
+    // Format Date Display
     const formattedDate = date ? date.toISOString().split('T')[0] : '';
 
     return (
-        <View>
-            {/* Display the chosen date as text or a button */}
-            <Button title={`Date: ${formattedDate}`} onPress={openPicker} />
+        <View style={styles.container}>
+            {/* Touchable button styled with warm colors */}
+            <TouchableOpacity onPress={openPicker} style={styles.dateButton}>
+                <Text style={styles.dateText}>📅 {formattedDate}</Text>
+            </TouchableOpacity>
 
-            {/* Show the picker when showPicker is true */}
+            {/* Show Picker when `showPicker` is true */}
             {showPicker && (
                 <DateTimePicker
                     value={date || new Date()}
                     mode="date"
                     display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                    onChange={onDateChange}   // <== call with two args
+                    onChange={onDateChange}
                 />
             )}
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        alignItems: 'center',
+        marginVertical: 10,
+    },
+    dateButton: {
+        backgroundColor: '#FF7043', // Sunset Orange
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    dateText: {
+        fontSize: 18,
+        color: '#F5F5DC', // Soft Beige (for contrast)
+        fontWeight: 'bold',
+    },
+});

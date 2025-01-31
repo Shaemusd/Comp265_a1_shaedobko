@@ -2,70 +2,75 @@ import React from 'react';
 import { Dimensions } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 
-// We'll map textual mood strings to the same index as these emojis
-// Order: sad, neutral, happy, very sad, very happy, angry, excited
+// Mood Emojis (Labels)
 const MOOD_EMOJIS = ['😢', '😐', '😊', '😭', '🤩', '😡', '🤪'];
 
-// We'll also define the textual mood strings in the same order
+// Mood Order for Data Mapping
 const MOOD_ORDER = ['Sad', 'Neutral', 'Happy', 'Very Sad', 'Very Happy', 'Angry', 'Excited'];
 
 export default function MoodBarChart({ entries }) {
-    // 1) Count each mood in entries
-    // First, create a count object by mood string
+    // Count each mood occurrence
     const counts = {
-        'Sad': 0,
-        'Neutral': 0,
-        'Happy': 0,
-        'Very Sad': 0,
-        'Very Happy': 0,
-        'Angry': 0,
-        'Excited': 0
+        'Sad': 0, 'Neutral': 0, 'Happy': 0,
+        'Very Sad': 0, 'Very Happy': 0, 'Angry': 0, 'Excited': 0
     };
 
-    // Go through each entry, increment the correct mood count
+    // Count mood occurrences from entries
     entries.forEach((entry) => {
         if (counts.hasOwnProperty(entry.mood)) {
             counts[entry.mood] += 1;
         }
     });
 
-    // 2) Build an array of counts in the same order as MOOD_ORDER
-    // E.g., [countOf(Sad), countOf(Neutral), countOf(Happy), ...]
+    // Generate Data Array in Correct Order
     const dataValues = MOOD_ORDER.map(mood => counts[mood]);
 
-    // 3) Now create chartData with the emoji labels and the numeric data
+    // Chart Data Object
     const chartData = {
-        labels: MOOD_EMOJIS,        // The emojis we want under each bar
+        labels: MOOD_EMOJIS,  // Emojis as X-axis labels
         datasets: [
             {
-                data: dataValues,       // The counts array
+                data: dataValues,
             },
         ],
     };
 
-    // 4) Render the bar chart
+    // Screen Width for Responsiveness
     const screenWidth = Dimensions.get('window').width;
 
     return (
         <BarChart
             data={chartData}
             width={screenWidth * 0.9}
-            height={220}
+            height={250}
             fromZero
-            style={{ marginRight: 20 }} 
             showBarTops
-            chartConfig={{
-                backgroundColor: '#fff',
-                backgroundGradientFrom: '#fff',
-                backgroundGradientTo: '#fff',
-                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // bars color
-                labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // label color
-                propsForVerticalLabels: {
-                    fontSize: 20, // if you want bigger emoji
-                },
-
+            withInnerLines={false} // Removes extra grid lines for cleaner look
+            style={{
+                borderRadius: 15,
+                marginBottom: 20,
+                alignSelf: 'center',
             }}
-            verticalLabelRotation={0} // 0, 30, or 45, etc.
+            chartConfig={{
+                backgroundColor: '#E64A19', // Deep Coral Background
+                backgroundGradientFrom: '#FF7043', // Sunset Orange
+                backgroundGradientTo: '#E64A19', // Deep Coral
+                
+                // 🟢 Proper Bar Color Fix
+                fillShadowGradient: '#FFC107', // Golden Yellow bars
+                fillShadowGradientOpacity: 1, // Ensure bars are fully colored
+                
+                // 🔹 Fix for missing `color()` function
+                color: (opacity = 1) => `rgba(245, 245, 220, ${opacity})`, // Soft Beige for grid/labels
+                
+                labelColor: (opacity = 1) => `rgba(245, 245, 220, ${opacity})`, // Soft Beige Labels
+                propsForVerticalLabels: {
+                    fontSize: 22, // Bigger emoji size
+                },
+                barPercentage: 0.6, // Controls bar width
+                decimalPlaces: 0, // No decimals for count
+            }}
+            verticalLabelRotation={0} // Keep emojis horizontal
         />
     );
 }

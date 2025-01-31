@@ -8,11 +8,10 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
-  //Platform,
 } from 'react-native';
 import MoodBarChart from './MoodBarChart';
 import DatePickerField from './DatePickerField';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+
 const moodImages = {
   'Very Sad': require('./assets/very_sad.png'),
   'Sad': require('./assets/sad.png'),
@@ -23,22 +22,16 @@ const moodImages = {
   'Excited': require('./assets/excited.png'),
 };
 
-// (Optionally) import chart or calendar libraries here
-// import { SomeChart } from 'some-chart-library';
-// import { Calendar } from 'react-native-calendars'; // example
+// Define Mood Arrays
+const firstRowMoods = ['Sad', 'Neutral', 'Happy', 'Very Sad', 'Very Happy'];
+const secondRowMoods = ['Angry', 'Excited'];
 
 export default function App() {
   // State to manage:
-  const [date, setDate] = useState(new Date())
-    ; const [selectedMood, setSelectedMood] = useState(null);
+  const [date, setDate] = useState(new Date());
+  const [selectedMood, setSelectedMood] = useState(null);
   const [note, setNote] = useState('');
-  // Past entries (example):
-  const [entries, setEntries] = useState([
-  ]);
-
-  // Mood arrays
-  const firstRowMoods = ['Sad', 'Neutral', 'Happy', 'Very Sad', 'Very Happy'];
-  const secondRowMoods = ['Angry', 'Excited'];
+  const [entries, setEntries] = useState([]);
 
   const handleSave = () => {
     const currentDate = date.toISOString().split('T')[0];
@@ -48,14 +41,12 @@ export default function App() {
     const existingEntryIndex = entries.findIndex((entry) => entry.date === currentDate);
 
     if (existingEntryIndex !== -1) {
-      // Replace the old entry with new data
+      // Replace old entry
       const updatedEntries = [...entries];
       updatedEntries[existingEntryIndex] = newEntry;
       setEntries(updatedEntries);
-
-      alert(`You Replaced ${currentDate}'s Mood.`);
+      alert(`You updated ${currentDate}'s mood.`);
     } else {
-      // Otherwise add a new entry
       setEntries([...entries, newEntry]);
     }
   };
@@ -65,23 +56,17 @@ export default function App() {
       <View style={styles.container}>
         <Text style={styles.header}>Mood Tracker</Text>
 
-        {/* --- BAR CHART AREA --- */}
+        {/* --- BAR CHART --- */}
         <View style={styles.chartContainer}>
-          {/* Remove this placeholder: */}
-          {/* <Text style={styles.chartPlaceholder}>[ Bar Chart of Moods ]</Text> */}
-
-          {/* Add your MoodBarChart component, passing in `entries` */}
           <MoodBarChart entries={entries} />
-
-
         </View>
-        {/* --- DATE PICKER (New) --- */}
+
+        {/* --- DATE PICKER --- */}
         <View style={styles.dateContainer}>
-          {/* Our new component to pick dates */}
           <DatePickerField date={date} onChangeDate={setDate} />
         </View>
 
-        {/* --- MOOD ROW 1 (Sad, Neutral, Happy, etc.) --- */}
+        {/* --- MOOD ROW 1 --- */}
         <View style={styles.moodRow}>
           {firstRowMoods.map((mood) => (
             <TouchableOpacity
@@ -100,7 +85,7 @@ export default function App() {
           ))}
         </View>
 
-        {/* --- MOOD ROW 2 (Angry, Excited) --- */}
+        {/* --- MOOD ROW 2 --- */}
         <View style={styles.moodRow}>
           {secondRowMoods.map((mood) => (
             <TouchableOpacity
@@ -119,135 +104,146 @@ export default function App() {
           ))}
         </View>
 
-
         {/* --- NOTE INPUT --- */}
         <View style={styles.noteContainer}>
-          <Text>Note:</Text>
+          <Text style={styles.noteLabel}>Note:</Text>
           <TextInput
             style={styles.noteInput}
             value={note}
             onChangeText={setNote}
             placeholder="How are you feeling?"
+            placeholderTextColor="#212121"
           />
         </View>
 
         {/* --- SAVE BUTTON --- */}
         <View style={{ marginVertical: 10 }}>
-          <Button title="Save / Log Mood" onPress={handleSave} />
+          <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
+            <Text style={styles.saveButtonText}>Save / Log Mood</Text>
+          </TouchableOpacity>
         </View>
 
-        {/* --- LAST WEEK OF MOODS --- */}
+        {/* --- MOOD HISTORY --- */}
         <Text style={styles.historyTitle}>LAST WEEK OF MOODS</Text>
-
-        {/* We use ScrollView to show entries, so it can scroll if many items */}
         <ScrollView style={styles.historyContainer}>
           {entries.map((entry, index) => (
             <View key={index} style={styles.entryItem}>
-              <Text>
-                {index + 1}) {entry.date} - {entry.mood},{' '}
-                {entry.note ? `"${entry.note}"` : ''}
+              <Text style={styles.historyText}>
+                {index + 1}) {entry.date} - {entry.mood},{" "}
+                {entry.note ? `"${entry.note}"` : ""}
               </Text>
             </View>
           ))}
-          {/* You could have a button or text link to "View entire month" */}
-          <Text style={{ marginTop: 10 }}>View Past Month (Calendar?)</Text>
         </ScrollView>
       </View>
     </ScrollView>
   );
 }
 
-
 const styles = StyleSheet.create({
-
-
-  moodIcon: {
-    width: 100,
-    height: 100,
-    resizeMode: 'contain', // or 'cover', etc.
-    backgroundColor: '#fff',
-    borderColor: '#fff',
-  },
-
   container: {
     flex: 1,
     paddingTop: 60,
     paddingHorizontal: 10,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFAB91', // Soft Peach
   },
   header: {
     padding: 20,
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: '#212121', // Dark Charcoal
   },
   chartContainer: {
     padding: 10,
-
     marginBottom: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },
-
   dateContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-  },
-  dateInput: {
-    marginLeft: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 5,
-    width: 120,
+    justifyContent: 'center',
   },
   moodRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-evenly',  // or 'center', or 'space-around'
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     marginBottom: 10,
   },
   moodItem: {
-    backgroundColor: '#eee',
-    // padding: 10,
-    borderRadius: 10,
-    margin: 5,            // little margin around each item
+    backgroundColor: '#E64A19', // Deep Coral
+    borderRadius: 15,
+    padding: 8,
+    margin: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  moodIcon: {
+    width: 80,
+    height: 80,
+    resizeMode: 'contain',
+  },
   moodIconSelected: {
-    width: 150,   // bigger
-    height: 150,
+    width: 100,
+    height: 100,
     resizeMode: 'contain',
   },
   selectedMoodItem: {
-    backgroundColor: '#cde',
-
+    backgroundColor: '#9C27B0', // Warm Lavender
   },
   noteContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
+    backgroundColor: '#F5F5DC', // Soft Beige
+    borderRadius: 10,
+    padding: 10,
+  },
+  noteLabel: {
+    fontSize: 16,
+    color: '#212121', // Dark Charcoal
+    marginRight: 10,
   },
   noteInput: {
-    marginLeft: 10,
     flex: 1,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 5,
+    fontSize: 16,
+    color: '#212121',
+  },
+  saveButton: {
+    backgroundColor: '#FF7043', // Sunset Orange
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  saveButtonText: {
+    fontSize: 18,
+    color: '#F5F5DC', // Soft Beige
+    fontWeight: 'bold',
   },
   historyTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     marginTop: 20,
+    color: '#212121',
   },
   historyContainer: {
     marginTop: 10,
-    height: 150, // example fixed height so it can scroll
+    height: 150,
   },
   entryItem: {
-    marginBottom: 5,
+    backgroundColor: '#FFC107', // Golden Yellow
+    padding: 10,
+    marginVertical: 5,
+    borderRadius: 5,
+  },
+  historyText: {
+    color: '#212121',
+    fontSize: 16,
   },
 });
+
