@@ -7,17 +7,17 @@ const formatDateToLastWeekday = (date) => {
     today.setHours(0, 0, 0, 0); // Reset today to midnight
 
     let inputDate = new Date(date);
-    inputDate.setDate(inputDate.getDate() + 1); // ✅ Fix: Shift the input date forward by 1 day
+    inputDate.setDate(inputDate.getDate() + 1); // ✅ Fix: Shift the input date forward by 1 day (this drove me insane)
     inputDate.setHours(0, 0, 0, 0); // Reset time to midnight
 
     // Convert both to 'YYYY-MM-DD' format for correct matching
     const todayStr = today.toLocaleDateString('en-CA'); 
     const inputStr = inputDate.toLocaleDateString('en-CA'); 
 
-    console.log("DEBUG LOG:");
-    console.log("Today (Local):", todayStr);
-    console.log("Input Date (Shifted):", inputStr);
-    console.log("Days Ago:", Math.floor((today - inputDate) / (1000 * 60 * 60 * 24)));
+    // console.log("DEBUG LOG:");
+    // console.log("Today (Local):", todayStr);
+    // console.log("Input Date (Shifted):", inputStr);
+    // console.log("Days Ago:", Math.floor((today - inputDate) / (1000 * 60 * 60 * 24)));
 
     const daysAgo = Math.floor((today - inputDate) / (1000 * 60 * 60 * 24));
     const weekdayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -48,7 +48,7 @@ export default function LastWeekMoods({ entries }) {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Mood History</Text>
+            <Text style={styles.title}>Past Week Moods</Text>
             <ScrollView style={styles.listContainer}>
                 {filteredEntries.length === 0 ? (
                     <Text style={styles.emptyText}>No moods logged yet.</Text>

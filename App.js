@@ -21,7 +21,7 @@ const moodImages = {
   'Angry': require('./assets/angry.png'),
   'Excited': require('./assets/excited.png'),
 };
-
+const date = [1]; //temp fix
 // Define Mood Arrays
 const firstRowMoods = ['Sad', 'Neutral', 'Happy', 'Very Sad', 'Very Happy'];
 const secondRowMoods = ['Angry', 'Excited'];
@@ -55,7 +55,7 @@ const newEntry = { date: currentDate, mood: selectedMood, note };
   return (
     <ScrollView style={styles.scrollContainer}>
       <View style={styles.container}>
-        <Text style={styles.header}>Mood Tracker</Text>
+        <Text style={styles.header}>My Mood Tracker</Text>
 
         {/* --- BAR CHART --- */}
         <View style={styles.chartContainer}>
@@ -107,7 +107,7 @@ const newEntry = { date: currentDate, mood: selectedMood, note };
 
         {/* --- NOTE INPUT --- */}
         <View style={styles.noteContainer}>
-          <Text style={styles.noteLabel}>Note:</Text>
+          <Text style={styles.noteLabel}>Write Here:</Text>
           <TextInput
             style={styles.noteInput}
             value={note}
@@ -120,11 +120,9 @@ const newEntry = { date: currentDate, mood: selectedMood, note };
         {/* --- SAVE BUTTON --- */}
         <View style={{ marginVertical: 10 }}>
           <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
-            <Text style={styles.saveButtonText}>Save / Log Mood</Text>
+            <Text style={styles.saveButtonText}>Log Your Mood!</Text>
           </TouchableOpacity>
         </View>
-
-        {/* --- MOOD HISTORY --- */}
 
 
 

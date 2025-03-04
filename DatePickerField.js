@@ -11,7 +11,7 @@ export default function DatePickerField({ date, onChangeDate }) {
     };
 
     // Handle Date Selection
-    const onDateChange = (event, selectedDate) => {
+    const onDateChange = (event, selectedDate) => { ///without the event it bugs out idk why will try to figure out
         setShowPicker(false);
         if (selectedDate) {
             onChangeDate(selectedDate);
